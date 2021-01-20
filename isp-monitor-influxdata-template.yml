@@ -1,0 +1,469 @@
+apiVersion: influxdata.com/v2alpha1
+kind: Bucket
+metadata:
+    name: fervent-herschel-737001
+spec:
+    name: Network
+    retentionRules:
+      - everySeconds: 2.592e+06
+        type: expire
+---
+apiVersion: influxdata.com/v2alpha1
+kind: CheckDeadman
+metadata:
+    name: laughing-chatterjee-b37001
+spec:
+    every: 1m0s
+    level: CRIT
+    name: Network Healthcheck
+    query: |-
+        from(bucket: "Network")
+          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+          |> filter(fn: (r) => r["_measurement"] == "ping")
+          |> filter(fn: (r) => r["_field"] == "average_response_ms")
+    staleTime: 10m0s
+    status: active
+    statusMessageTemplate: 'Check: ${ r._check_name } is: ${ r._level }'
+    timeSince: 1m0s
+---
+apiVersion: influxdata.com/v2alpha1
+kind: NotificationEndpointSlack
+metadata:
+    name: laughing-mccarthy-b37003
+spec:
+    name: Webhook
+    status: active
+    url: https://REPALCE_ME_WITH_WEBHOOK.com
+---
+apiVersion: influxdata.com/v2alpha1
+kind: NotificationRule
+metadata:
+    name: obstinate-beaver-b37007
+spec:
+    endpointName: laughing-mccarthy-b37003
+    every: 1m0s
+    messageTemplate: 'Notification Rule: ${ r._notification_rule_name } triggered
+        by check: ${ r._check_name }: ${ r._message }'
+    name: Going online
+    statusRules:
+      - currentLevel: OK
+        previousLevel: CRIT
+---
+apiVersion: influxdata.com/v2alpha1
+kind: NotificationRule
+metadata:
+    name: pedantic-ptolemy-b37005
+spec:
+    endpointName: laughing-mccarthy-b37003
+    every: 1m0s
+    messageTemplate: 'Notification Rule: ${ r._notification_rule_name } triggered
+        by check: ${ r._check_name }: ${ r._message }'
+    name: Going Offline
+    statusRules:
+      - currentLevel: CRIT
+        previousLevel: OK
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Dashboard
+metadata:
+    name: alerting-hamilton-f37001
+spec:
+    charts:
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: y
+            scale: linear
+        colors:
+          - hex: '#31C0F6'
+            id: 976493ec-e5fb-49c1-a0db-4cdaa1fb8961
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 9941e749-11f0-4114-810b-e7e14a4b222a
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 3baf79cd-b2d7-41ed-bbd5-dc38cc76143d
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 10
+        name: Ping
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "Network")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "ping")
+                  |> filter(fn: (r) => r["_field"] == "average_response_ms")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        width: 4
+        xCol: _time
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: y
+            scale: linear
+        colors:
+          - hex: '#31C0F6'
+            id: 976493ec-e5fb-49c1-a0db-4cdaa1fb8961
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 9941e749-11f0-4114-810b-e7e14a4b222a
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 3baf79cd-b2d7-41ed-bbd5-dc38cc76143d
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 10
+        name: Package Loss
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "Network")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "ping")
+                  |> filter(fn: (r) => r["_field"] == "percent_packet_loss")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        width: 4
+        xCol: _time
+        xPos: 4
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: y
+            scale: linear
+        colors:
+          - hex: '#31C0F6'
+            id: 976493ec-e5fb-49c1-a0db-4cdaa1fb8961
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 9941e749-11f0-4114-810b-e7e14a4b222a
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 3baf79cd-b2d7-41ed-bbd5-dc38cc76143d
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 10
+        name: DNS Resolver
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "Network")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "dns_query")
+                  |> filter(fn: (r) => r["_field"] == "query_time_ms")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        width: 4
+        xCol: _time
+        xPos: 8
+        yCol: _value
+    name: Network Monitor
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Telegraf
+metadata:
+    name: upbeat-kepler-337001
+spec:
+    config: |+
+        # Telegraf Configuration
+        #
+
+        # Configuration for telegraf agent
+        [agent]
+          ## Default data collection interval for all inputs
+          interval = "10s"
+          ## Rounds collection interval to 'interval'
+          ## ie, if interval="10s" then always collect on :00, :10, :20, etc.
+          round_interval = true
+
+          ## Telegraf will send metrics to outputs in batches of at most
+          ## metric_batch_size metrics.
+          ## This controls the size of writes that Telegraf sends to output plugins.
+          metric_batch_size = 1000
+
+          ## For failed writes, telegraf will cache metric_buffer_limit metrics for each
+          ## output, and will flush this buffer on a successful write. Oldest metrics
+          ## are dropped first when this buffer fills.
+          ## This buffer only fills when writes fail to output plugin(s).
+          metric_buffer_limit = 10000
+
+          ## Collection jitter is used to jitter the collection by a random amount.
+          ## Each plugin will sleep for a random time within jitter before collecting.
+          ## This can be used to avoid many plugins querying things like sysfs at the
+          ## same time, which can have a measurable effect on the system.
+          collection_jitter = "0s"
+
+          ## Default flushing interval for all outputs. Maximum flush_interval will be
+          ## flush_interval + flush_jitter
+          flush_interval = "10s"
+          ## Jitter the flush interval by a random amount. This is primarily to avoid
+          ## large write spikes for users running a large number of telegraf instances.
+          ## ie, a jitter of 5s and interval 10s means flushes will happen every 10-15s
+          flush_jitter = "0s"
+
+          ## By default or when set to "0s", precision will be set to the same
+          ## timestamp order as the collection interval, with the maximum being 1s.
+          ##   ie, when interval = "10s", precision will be "1s"
+          ##       when interval = "250ms", precision will be "1ms"
+          ## Precision will NOT be used for service inputs. It is up to each individual
+          ## service input to set the timestamp at the appropriate precision.
+          ## Valid time units are "ns", "us" (or "µs"), "ms", "s".
+          precision = ""
+
+          ## Logging configuration:
+          ## Run telegraf with debug log messages.
+          debug = false
+          ## Run telegraf in quiet mode (error log messages only).
+          quiet = false
+          ## Specify the log file name. The empty string means to log to stderr.
+          logfile = ""
+
+          ## Override default hostname, if empty use os.Hostname()
+          # hostname = "$BALENA_DEVICE_NAME_AT_INIT"
+          ## If set to true, do no set the "host" tag in the telegraf agent.
+          omit_hostname = false
+
+
+        ###############################################################################
+        #                            OUTPUT PLUGINS                                   #
+        ###############################################################################
+
+         [[outputs.influxdb_v2]]
+          ## The URLs of the InfluxDB cluster nodes.
+          ##
+          ## Multiple URLs can be specified for a single cluster, only ONE of the
+          ## urls will be written to each interval.
+          ## urls exp: http://127.0.0.1:9999
+          urls = ["$INFLUX_HOST"]
+
+          ## Token for authentication.
+          token = "$INFLUX_TOKEN"
+
+          ## Organization is the name of the organization you wish to write to; must exist.
+          organization = "$INFLUX_ORG"
+
+          ## Destination bucket to write into.
+          bucket = "Network"
+
+
+        ###############################################################################
+        #                            INPUT PLUGINS                                    #
+        ###############################################################################
+
+        # # Query given DNS server and gives statistics
+        [[inputs.dns_query]]
+         ## servers to query
+          servers = ["8.8.8.8", "1.1.1.1"]
+
+        #   ## Network is the network protocol name.
+        #   # network = "udp"
+        #
+        #   ## Domains or subdomains to query.
+          domains = ["google.com"]
+        #
+        #   ## Query record type.
+        #   ## Posible values: A, AAAA, CNAME, MX, NS, PTR, TXT, SOA, SPF, SRV.
+        #   # record_type = "A"
+        #
+        #   ## Dns server port.
+        #   # port = 53
+        #
+        #   ## Query timeout in seconds.
+          timeout = 2
+
+
+        # # Read formatted metrics from one or more HTTP endpoints
+        # [[inputs.http]]
+        #   ## One or more URLs from which to read formatted metrics
+        #   urls = [
+        #     "http://localhost/metrics"
+        #   ]
+        #
+        #   ## HTTP method
+        #   # method = "GET"
+        #
+        #   ## Optional HTTP headers
+        #   # headers = {"X-Special-Header" = "Special-Value"}
+        #
+        #   ## Optional HTTP Basic Auth Credentials
+        #   # username = "username"
+        #   # password = "pa$$word"
+        #
+        #   ## HTTP entity-body to send with POST/PUT requests.
+        #   # body = ""
+        #
+        #   ## HTTP Content-Encoding for write request body, can be set to "gzip" to
+        #   ## compress body or "identity" to apply no encoding.
+        #   # content_encoding = "identity"
+        #
+        #   ## Optional TLS Config
+        #   # tls_ca = "/etc/telegraf/ca.pem"
+        #   # tls_cert = "/etc/telegraf/cert.pem"
+        #   # tls_key = "/etc/telegraf/key.pem"
+        #   ## Use TLS but skip chain & host verification
+        #   # insecure_skip_verify = false
+        #
+        #   ## Amount of time allowed to complete the HTTP request
+        #   # timeout = "5s"
+        #
+        #   ## Data format to consume.
+        #   ## Each data format has its own unique set of configuration options, read
+        #   ## more about them here:
+        #   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+        #   # data_format = "influx"
+
+
+        # # HTTP/HTTPS request given an address a method and a timeout
+        # [[inputs.http_response]]
+        #   ## Server address (default http://localhost)
+        #   # address = "http://localhost"
+        #
+        #   ## Set http_proxy (telegraf uses the system wide proxy settings if it's is not set)
+        #   # http_proxy = "http://localhost:8888"
+        #
+        #   ## Set response_timeout (default 5 seconds)
+        #   # response_timeout = "5s"
+        #
+        #   ## HTTP Request Method
+        #   # method = "GET"
+        #
+        #   ## Whether to follow redirects from the server (defaults to false)
+        #   # follow_redirects = false
+        #
+        #   ## Optional HTTP Request Body
+        #   # body = '''
+        #   # {'fake':'data'}
+        #   # '''
+        #
+        #   ## Optional substring or regex match in body of the response
+        #   # response_string_match = "\"service_status\": \"up\""
+        #   # response_string_match = "ok"
+        #   # response_string_match = "\".*_status\".?:.?\"up\""
+        #
+        #   ## Optional TLS Config
+        #   # tls_ca = "/etc/telegraf/ca.pem"
+        #   # tls_cert = "/etc/telegraf/cert.pem"
+        #   # tls_key = "/etc/telegraf/key.pem"
+        #   ## Use TLS but skip chain & host verification
+        #   # insecure_skip_verify = false
+        #
+        #   ## HTTP Request Headers (all values must be strings)
+        #   # [inputs.http_response.headers]
+        #   #   Host = "github.com"
+
+
+        # # Read flattened metrics from one or more JSON HTTP endpoints
+        # [[inputs.httpjson]]
+        #   ## NOTE This plugin only reads numerical measurements, strings and booleans
+        #   ## will be ignored.
+        #
+        #   ## Name for the service being polled.  Will be appended to the name of the
+        #   ## measurement e.g. httpjson_webserver_stats
+        #   ##
+        #   ## Deprecated (1.3.0): Use name_override, name_suffix, name_prefix instead.
+        #   name = "webserver_stats"
+        #
+        #   ## URL of each server in the service's cluster
+        #   servers = [
+        #     "http://localhost:9999/stats/",
+        #     "http://localhost:9998/stats/",
+        #   ]
+        #   ## Set response_timeout (default 5 seconds)
+        #   response_timeout = "5s"
+        #
+        #   ## HTTP method to use: GET or POST (case-sensitive)
+        #   method = "GET"
+        #
+        #   ## List of tag names to extract from top-level of JSON server response
+        #   # tag_keys = [
+        #   #   "my_tag_1",
+        #   #   "my_tag_2"
+        #   # ]
+        #
+        #   ## Optional TLS Config
+        #   # tls_ca = "/etc/telegraf/ca.pem"
+        #   # tls_cert = "/etc/telegraf/cert.pem"
+        #   # tls_key = "/etc/telegraf/key.pem"
+        #   ## Use TLS but skip chain & host verification
+        #   # insecure_skip_verify = false
+        #
+        #   ## HTTP parameters (all values must be strings).  For "GET" requests, data
+        #   ## will be included in the query.  For "POST" requests, data will be included
+        #   ## in the request body as "x-www-form-urlencoded".
+        #   # [inputs.httpjson.parameters]
+        #   #   event_type = "cpu_spike"
+        #   #   threshold = "0.75"
+        #
+        #   ## HTTP Headers (all values must be strings)
+        #   # [inputs.httpjson.headers]
+        #   #   X-Auth-Token = "my-xauth-token"
+        #   #   apiVersion = "v1"
+
+
+        # # Ping given url(s) and return statistics
+        [[inputs.ping]]
+          ## List of urls to ping
+          urls = ["google.com", "8.8.8.8"]
+
+          ## Number of pings to send per collection (ping -c <COUNT>)
+          count = 1
+
+          ## Interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
+          ## Not available in Windows.
+          ping_interval = 10.0
+
+          ## Per-ping timeout, in s. 0 == no timeout (ping -W <TIMEOUT>)
+          timeout = 1.0
+
+          ## Total-ping deadline, in s. 0 == no deadline (ping -w <DEADLINE>)
+          # deadline = 10
+
+          ## Interface or source address to send ping from (ping -I <INTERFACE/SRC_ADDR>)
+          ## on Darwin and Freebsd only source address possible: (ping -S <SRC_ADDR>)
+          # interface = ""
+
+          ## Specify the ping executable binary, default is "ping"
+          binary = "/bin/ping"
+
+          ## Arguments for ping command
+          ## when arguments is not empty, other options (ping_interval, timeout, etc) will be ignored
+          arguments = ["-c", "1", "-n", "-s", "32", "-i", "1", "-W", "1", "-w", "10"]
+
+
+    description: Simple monitor with Ping and DNS query. Requires $INFLUX_HOST; $INFLUX_TOKEN;
+        $INFLUX_ORG
+    name: Network Monitor
