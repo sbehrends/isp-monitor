@@ -1,0 +1,22 @@
+version: '2.1'
+
+services:
+  telegraf:
+    build: ./telegraf
+    restart: always
+    environment:
+      # BALENA_DEVICE_NAME_AT_INIT: ''
+      # INFLUX_URL: ''
+      # DNS_ISP: ''
+      # ROUTER_IP: ''
+  speed:
+    build: ./speed
+    restart: always
+    environment:
+      NODE_ENV: 'production'
+      SPEED_TEST: 'true'
+      # INFLUX_DATABASE: ''
+      # INFLUX_URL: ''
+      # SPEED_CRON: ''
+      # BALENA_DEVICE_NAME_AT_INIT: ''
+      # LVL_TEST: ''

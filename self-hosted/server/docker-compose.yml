@@ -1,0 +1,31 @@
+version: '2.1'
+
+volumes:
+  influx:
+  grafana-storage:
+
+services:
+  influx:
+    image: "influxdb:1.7-alpine"
+    restart: always
+    volumes:
+      - influx:/data
+    ports:
+      - 8086:8086
+    environment:
+      - INFLUXDB_HTTP_ENABLED=true
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+      - INFLUXDB_ADMIN_USER=influxadmin
+      - INFLUXDB_ADMIN_PASSWORD=ADMIN_SECRET_PASSWORD
+  grafana:
+    image: "grafana/grafana"
+    restart: always
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - influx
+    ports:
+      - 3000:3000
+    environment:
+      # - GF_SERVER_DOMAIN=domain.com
+      # - GF_SERVER_ROOT_URL=http://domain.com:3000

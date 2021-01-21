@@ -105,3 +105,12 @@ Follow [this repo](https://github.com/germancorbetta/isp-monitor) as reference o
 ## [WIP] Self Hosting
 
 Deploy InfluxDB and Grafana on a Virtual Private Server, or similar cloud hosting. And Telegraf in Raspberry Pi at your home.
+
+This is my personal current setup. I have not documented it all yet, but includes InfluxDB, Grafana and Let's Encrypt certs running in docker in a VPS. Besides Telegraf Agent there is a NodeJS service to measure Internet Speed (using speedtest-net) and Modem Signal Level (Only available for ISP Fibertel, Argentina).
+
+Reference script is available in `self-hosted` folder.
+
+## Additional Tooling
+
+I recommend [Balena](https://www.balena.io/) to orchestrate and deploy Raspberry Pi's with Telegraf agent. In my current setup I have 4 Raspberry Pi's managed by Balena reporting to my Self Hosted Influx + Grafana.
+
