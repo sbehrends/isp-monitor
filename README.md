@@ -26,6 +26,8 @@ There are three different alternatives to deploy this stack
 
 ## Using InfluxDB Free Tier
 
+![Build With Influx](https://www.influxdata.com/wp-content/uploads/built-on-influxdb-purple.png)
+
 Using Influxdata Free Tier as the managed cloud solution that combines InfluxDB + Grafana. And Telegraf in Raspberry Pi at your home.
 
 ### Step 1 - Create Influxdb Account
