@@ -41,7 +41,7 @@ Using Influxdata Free Tier as the managed cloud solution that combines InfluxDB 
 ### Step 2 - Import Template
 
 1. Open your Influxdb Account
-2. On the sidebar. Sertings > Templates
+2. On the sidebar. Settings > Templates
 3. Paste URL of Template
    https://raw.githubusercontent.com/sbehrends/isp-monitor/main/isp-monitor-influxdata-template.yml
 4. Click Lookup Tempalte
